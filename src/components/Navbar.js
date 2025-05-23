@@ -10,7 +10,7 @@ export default function Navbar() {
       await signOut(auth);
       navigate('/login');
     } catch (error) {
-      console.error('Chyba při odhlašování:', error);
+      console.error(error);
     }
   };
 
