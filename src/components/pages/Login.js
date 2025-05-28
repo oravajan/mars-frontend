@@ -6,7 +6,7 @@ import {
 } from 'firebase/auth';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {Navigate} from 'react-router-dom';
-import {auth} from '../config/firebase-config';
+import {auth} from '../../config/firebase-config';
 
 export default function AuthPage() {
   const [email, setEmail] = useState('');

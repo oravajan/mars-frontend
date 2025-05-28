@@ -5,24 +5,37 @@ import {
   Navigate,
 } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
-import Login from './Login';
+import Login from './pages/Login';
 import Navbar from './Navbar';
+import Lobby from './pages/Lobby';
 
 function App() {
   return (
       <Router>
         <Routes>
           <Route path="/login" element={<Login/>}/>
+
+          <Route
+              path="/lobby"
+              element={
+                <ProtectedRoute>
+                  <Navbar/>
+                  <Lobby/>
+                </ProtectedRoute>
+              }
+          />
+
           <Route
               path="/"
               element={
                 <ProtectedRoute>
                   <Navbar/>
-                  <h1>Hello Mars</h1>
+                  Game
                 </ProtectedRoute>
               }
           />
-          <Route path="*" element={<Navigate to="/"/>}/>
+
+          <Route path="*" element={<Navigate to="/lobby"/>}/>
         </Routes>
       </Router>
   );
