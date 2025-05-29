@@ -4,17 +4,23 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
 } from 'firebase/auth';
+import {
+  doc,
+  setDoc,
+} from 'firebase/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {Navigate} from 'react-router-dom';
 import {auth} from '../../config/firebase-config';
+import {db} from '../../config/firebase-config';
 
-export default function AuthPage() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState('login'); // "login" | "register" | "reset"
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [user] = useAuthState(auth);
+  const [displayName, setDisplayName] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +31,16 @@ export default function AuthPage() {
       if (mode === 'login') {
         await signInWithEmailAndPassword(auth, email, password);
       } else if (mode === 'register') {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = userCred.user.uid;
+
+        await setDoc(doc(db, 'users', uid), {
+          uid,
+          email,
+          displayName,
+          createdAt: new Date(),
+        });
+
         setMessage('Registrace úspěšná. Nyní se můžeš přihlásit.');
         setMode('login');
       } else if (mode === 'reset') {
@@ -49,6 +64,15 @@ export default function AuthPage() {
         </h2>
 
         <form onSubmit={handleSubmit}>
+          {mode === 'register' && (
+              <input
+                  type="text"
+                  placeholder="Přezdívka"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  required
+              />
+          )}
           <input
               type="email"
               placeholder="E-mail"
