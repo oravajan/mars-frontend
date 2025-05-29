@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import {authorizedFetch} from '../utils/authorizedFetch';
 
 export function useLobbies() {
   const [lobbies, setLobbies] = useState([]);
@@ -7,8 +8,9 @@ export function useLobbies() {
   const fetchLobbies = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/api/lobby/list`);
+      const response = await authorizedFetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/lobby/list`,
+          {method: 'GET'});
       const data = await response.json();
       setLobbies(data);
     } catch (error) {

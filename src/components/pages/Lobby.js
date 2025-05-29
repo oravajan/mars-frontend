@@ -1,10 +1,8 @@
 import {useLobbies} from '../../hooks/useLobbies';
 import {authorizedFetch} from '../../utils/authorizedFetch';
-import {auth} from '../../config/firebase-config';
 
 export default function Lobby() {
   const {lobbies, loading, fetchLobbies} = useLobbies();
-  const user = auth.currentUser;
 
   const joinLobby = async (id) => {
     try {
@@ -48,10 +46,10 @@ export default function Lobby() {
       <div>
         <button onClick={createLobby}>Vytvořit novou lobby</button>
         <ul>
-          {lobbies.map(({id, players}) => (
+          {lobbies.map(({id, players, isMember}) => (
               <li key={id}>
                 {players.join(', ')}
-                {!players.includes(user.uid) && (
+                {!isMember && (
                     <button onClick={() => joinLobby(id)}>Připojit se</button>
                 )}
               </li>
